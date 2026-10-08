@@ -1,0 +1,5 @@
+.env
+dev/*.sql
+node_modules/
+dist/
+*.tsbuildinfo
