@@ -3,9 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { HealthController } from './health.controller.js';
 import { InfraModule } from './infra.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { ConsumosModule } from './consumos/consumos.module.js';
 
 @Module({
-  imports: [ConfigModule.forRoot(), InfraModule, AuthModule],
+  imports: [ConfigModule.forRoot(), InfraModule, AuthModule, ConsumosModule],
   controllers: [HealthController],
 })
 export class AppModule {}
