@@ -1,0 +1,109 @@
+:root {
+  --fondo: #f5f6f8;
+  --superficie: #ffffff;
+  --texto: #1b1f24;
+  --suave: #667085;
+  --borde: #e3e6ea;
+  --acento: #2563eb;
+  --acento-texto: #ffffff;
+  --error: #b42318;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #0f1216;
+    --superficie: #171b21;
+    --texto: #e8eaed;
+    --suave: #98a2b3;
+    --borde: #2a3038;
+    --acento: #4f8cff;
+    --acento-texto: #0b1020;
+    --error: #ff8a80;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.45;
+}
+
+.suave { color: var(--suave); }
+.error { color: var(--error); margin: 0; }
+
+.centro {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.tarjeta h1, .tarjeta h2 { margin: 0 0 .5rem; }
+
+.login {
+  width: 100%;
+  max-width: 360px;
+  display: grid;
+  gap: .9rem;
+}
+.login p { margin: 0; }
+
+label { display: grid; gap: .3rem; font-size: .9rem; }
+input {
+  font: inherit;
+  padding: .65rem .75rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--fondo);
+  color: var(--texto);
+}
+input:focus-visible, button:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: .7rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--acento);
+  color: var(--acento-texto);
+  cursor: pointer;
+}
+button:disabled { opacity: .6; cursor: default; }
+button.secundario {
+  background: transparent;
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  padding: .45rem .8rem;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+}
+.barra .correo { margin-left: auto; font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.contenido { max-width: 900px; margin: 0 auto; padding: 1rem; }
+
+.lista { list-style: none; margin: .5rem 0 0; padding: 0; }
+.lista li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .55rem 0;
+  border-top: 1px solid var(--borde);
+}
+.lista li:first-child { border-top: 0; }
