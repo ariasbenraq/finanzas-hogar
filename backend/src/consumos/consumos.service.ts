@@ -91,4 +91,80 @@ export class ConsumosService {
       return { periodo, actual: esActual, ...res };
     });
   }
+
+  async diario(periodo: string) {
+    const actual = await this.periodoActual();
+    const esActual = periodo === actual;
+    return this.cache(`diario:${periodo}`, esActual ? 60 : 86400, async () => {
+      const { rows } = await this.pg.query(
+        `WITH p AS (
+           SELECT $1::date AS inicio,
+                  LEAST(($1::date + INTERVAL '1 month')::date,
+                        (now() AT TIME ZONE 'America/Lima')::date) AS ultimo
+         ), base AS (
+           SELECT (fecha AT TIME ZONE 'America/Lima')::date AS dia,
+                  CASE WHEN fuente = 'tarjeta' THEN 'tarjeta' ELSE 'efectivo' END AS categoria,
+                  moneda, monto
+           FROM consumos
+           WHERE periodo = $1::date AND fuente IN ('tarjeta', 'efectivo', 'yape', 'plin')
+         ), series AS (
+           SELECT DISTINCT categoria, moneda FROM base
+         ), dias AS (
+           SELECT d::date AS dia FROM p, generate_series(p.inicio, p.ultimo, INTERVAL '1 day') AS d
+         ), agrupado AS (
+           SELECT dia, categoria, moneda, SUM(monto) AS total, COUNT(*) AS n
+           FROM base GROUP BY 1, 2, 3
+         )
+         SELECT s.categoria, s.moneda, d.dia::text AS dia,
+                COALESCE(a.total, 0) AS total,
+                COALESCE(a.n, 0)::int AS consumos,
+                SUM(COALESCE(a.total, 0)) OVER (PARTITION BY s.categoria, s.moneda ORDER BY d.dia) AS acumulado
+         FROM dias d CROSS JOIN series s
+         LEFT JOIN agrupado a ON a.dia = d.dia AND a.categoria = s.categoria AND a.moneda = s.moneda
+         ORDER BY s.categoria, s.moneda, d.dia`,
+        [periodo],
+      );
+
+      const mapa = new Map<string, { categoria: string; moneda: string; puntos: any[] }>();
+      for (const r of rows) {
+        const k = `${r.categoria}|${r.moneda}`;
+        if (!mapa.has(k)) mapa.set(k, { categoria: r.categoria, moneda: r.moneda, puntos: [] });
+        mapa.get(k)!.puntos.push({
+          dia: r.dia,
+          total: Number(r.total),
+          consumos: r.consumos,
+          acumulado: Number(r.acumulado),
+        });
+      }
+      return { periodo, actual: esActual, series: [...mapa.values()] };
+    });
+  }
+
+  async movimientos(periodo: string, categoria: string | null, limit: number, offset: number) {
+    const actual = await this.periodoActual();
+    const esActual = periodo === actual;
+    const key = `mov:${periodo}:${categoria ?? 'todas'}:${limit}:${offset}`;
+    return this.cache(key, esActual ? 60 : 86400, async () => {
+      const filtro = `c.periodo = $1::date
+        AND c.fuente IN ('tarjeta', 'efectivo', 'yape', 'plin')
+        AND ($2::text IS NULL
+             OR (CASE WHEN c.fuente = 'tarjeta' THEN 'tarjeta' ELSE 'efectivo' END) = $2)`;
+      const { rows } = await this.pg.query(
+        `SELECT c.id,
+                to_char(c.fecha AT TIME ZONE 'America/Lima', 'YYYY-MM-DD"T"HH24:MI') AS fecha_local,
+                c.establecimiento, c.monto::float8 AS monto, c.moneda,
+                CASE WHEN c.fuente = 'tarjeta' THEN 'tarjeta' ELSE 'efectivo' END AS categoria
+         FROM consumos c
+         WHERE ${filtro}
+         ORDER BY c.fecha DESC, c.id DESC
+         LIMIT $3 OFFSET $4`,
+        [periodo, categoria, limit, offset],
+      );
+      const { rows: cuenta } = await this.pg.query(
+        `SELECT COUNT(*)::int AS n FROM consumos c WHERE ${filtro}`,
+        [periodo, categoria],
+      );
+      return { periodo, total: cuenta[0].n as number, limit, offset, items: rows };
+    });
+  }
 }
