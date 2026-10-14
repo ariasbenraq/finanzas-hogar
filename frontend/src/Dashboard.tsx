@@ -1,20 +1,41 @@
 import { useEffect, useState } from 'react';
-import { api, type Periodo } from './api';
+import { api, type Periodo, type Resumen } from './api';
 import { useAuth } from './auth';
+import SelectorPeriodo from './SelectorPeriodo';
+import Tarjetas from './Tarjetas';
 
-// Pantalla provisional: confirma que la sesión y las llamadas a la API funcionan.
-// En las sesiones 8 a 10 se reemplaza por las tarjetas, los gráficos y la tabla.
 export default function Dashboard() {
   const { email, logout } = useAuth();
   const [periodos, setPeriodos] = useState<Periodo[] | null>(null);
+  const [periodo, setPeriodo] = useState('');
+  const [resumen, setResumen] = useState<Resumen | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Lista de periodos; arranca en el actual (o en el más reciente si no hubiera).
   useEffect(() => {
     api
       .periodos()
-      .then(setPeriodos)
+      .then((ps) => {
+        setPeriodos(ps);
+        setPeriodo((ps.find((p) => p.actual) ?? ps[0])?.periodo ?? '');
+      })
       .catch((e: Error) => setError(e.message));
   }, []);
+
+  // Resumen del periodo seleccionado. Se descarta la respuesta si cambió el periodo mientras cargaba.
+  useEffect(() => {
+    if (!periodo) return;
+    let vigente = true;
+    setResumen(null);
+    setError(null);
+    api
+      .resumen(periodo)
+      .then((r) => vigente && setResumen(r))
+      .catch((e: Error) => vigente && setError(e.message));
+    return () => {
+      vigente = false;
+    };
+  }, [periodo]);
 
   return (
     <>
@@ -27,25 +48,17 @@ export default function Dashboard() {
       </header>
 
       <main className="contenido">
-        <section className="tarjeta">
-          <h2>Periodos disponibles</h2>
-          {error && <p className="error">{error}</p>}
-          {!error && !periodos && <p className="suave">Cargando…</p>}
-          {periodos && (
-            <ul className="lista">
-              {periodos.map((p) => (
-                <li key={p.periodo}>
-                  <span>{p.periodo}</span>
-                  <span className="suave">
-                    {p.consumos} consumos
-                    {p.actual ? ' · actual' : ''}
-                    {p.parcial ? ' · parcial' : ''}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        {periodos && periodos.length > 0 && (
+          <SelectorPeriodo periodos={periodos} valor={periodo} onChange={setPeriodo} />
+        )}
+
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
+        {!error && !resumen && <p className="suave">Cargando…</p>}
+        {resumen && <Tarjetas resumen={resumen} />}
       </main>
     </>
   );
