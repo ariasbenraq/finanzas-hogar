@@ -205,3 +205,46 @@ button.peligro:hover:not(:disabled) { filter: brightness(.96); }
   text-align: center;
 }
 .recharts-text { fill: var(--suave); }
+
+.movimientos { margin-top: 1.25rem; }
+.cabecera-movimientos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+.cabecera-movimientos h2 { margin: 0; }
+.filtro { display: flex; align-items: center; gap: 1rem; }
+.filtro label { display: flex; align-items: center; gap: .5rem; }
+.filtro select { padding: .4rem .6rem; }
+
+.tabla-scroll { overflow-x: auto; }
+.tabla { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.tabla th {
+  text-align: left;
+  color: var(--suave);
+  font-weight: 600;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .5rem .6rem;
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+.tabla td { padding: .55rem .6rem; border-bottom: 1px solid var(--borde); }
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover { background: var(--fondo); }
+.tabla .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabla th.num { text-align: right; }
+.tabla .fecha { white-space: nowrap; }
+.tabla .estab { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: .9rem;
+}

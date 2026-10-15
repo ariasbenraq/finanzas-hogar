@@ -40,6 +40,19 @@ export function etiquetaDia(dia: string): string {
   }).format(fecha);
 }
 
+// "2026-09-08T18:29" -> "08 sep · 18:29"
+export function etiquetaFechaHora(fecha: string): string {
+  const [fechaParte, hora] = fecha.split('T');
+  const [y, m, d] = fechaParte.split('-').map(Number);
+  const f = new Date(Date.UTC(y, m - 1, d));
+  const dia = new Intl.DateTimeFormat('es-PE', {
+    day: '2-digit',
+    month: 'short',
+    timeZone: 'UTC',
+  }).format(f);
+  return `${dia} · ${hora ?? ''}`.trim();
+}
+
 export const CATEGORIAS: Record<string, string> = {
   tarjeta: 'Tarjeta',
   efectivo: 'Efectivo',

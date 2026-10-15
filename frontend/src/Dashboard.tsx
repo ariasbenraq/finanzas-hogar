@@ -4,6 +4,7 @@ import { useAuth } from './auth';
 import SelectorPeriodo from './SelectorPeriodo';
 import Tarjetas from './Tarjetas';
 import Graficos from './Graficos';
+import Movimientos from './Movimientos';
 
 export default function Dashboard() {
   const { email, logout } = useAuth();
@@ -73,6 +74,7 @@ export default function Dashboard() {
 
         {resumen && <Tarjetas resumen={resumen} />}
         {diario && <Graficos series={diario.series} />}
+        {periodo && <Movimientos periodo={periodo} />}
       </main>
     </>
   );

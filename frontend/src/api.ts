@@ -43,6 +43,23 @@ export interface Diario {
   series: SerieDiaria[];
 }
 
+export interface Movimiento {
+  id: number;
+  fecha_local: string;
+  establecimiento: string | null;
+  monto: number;
+  moneda: string;
+  categoria: string;
+}
+
+export interface MovimientosPagina {
+  periodo: string;
+  total: number;
+  limit: number;
+  offset: number;
+  items: Movimiento[];
+}
+
 export class ApiError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -92,4 +109,11 @@ export const api = {
   periodos: () => request<Periodo[]>('/periodos'),
   resumen: (periodo: string) => request<Resumen>(`/resumen?periodo=${encodeURIComponent(periodo)}`),
   diario: (periodo: string) => request<Diario>(`/diario?periodo=${encodeURIComponent(periodo)}`),
+  movimientos: (opts: { periodo: string; categoria?: string | null; limit?: number; offset?: number }) => {
+    const q = new URLSearchParams({ periodo: opts.periodo });
+    if (opts.categoria) q.set('categoria', opts.categoria);
+    if (opts.limit != null) q.set('limit', String(opts.limit));
+    if (opts.offset != null) q.set('offset', String(opts.offset));
+    return request<MovimientosPagina>(`/movimientos?${q}`);
+  },
 };
