@@ -16,12 +16,58 @@ export interface ResumenLinea {
   dias_transcurridos: number;
 }
 
+// Ciclo real de facturación (BCP) del periodo.
+export interface Ciclo {
+  inicio: string;
+  cierre: string;
+  pago: string | null;
+  dias_ciclo: number;
+  dias_transcurridos: number;
+  dias_para_pago: number | null;
+  cerrado: boolean;
+}
+
+// Presupuesto mensual de la tarjeta (en soles) frente a lo gastado y lo proyectado.
+export interface Presupuesto {
+  moneda: string;
+  monto: number | null;
+  gastado: number;
+  porcentaje: number | null;
+  proyeccion: number;
+  excedido: boolean;
+}
+
+export interface GastoPorCategoria {
+  categoria: string;
+  consumos: number;
+  total: number;
+}
+
 export interface Resumen {
   periodo: string;
   actual: boolean;
+  ciclo: Ciclo;
   tarjeta: ResumenLinea[];
   efectivo: ResumenLinea[];
+  presupuesto: Presupuesto;
+  gastos_categoria?: GastoPorCategoria[];
 }
+
+// Estado de la línea, cargado a mano.
+export interface BancoMoneda {
+  moneda: string;
+  a_pagar: number | null;
+  linea_total: number | null;
+  consumido: number | null;
+  disponible: number | null;
+  actualizado_en: string;
+}
+
+export interface Banco {
+  monedas: BancoMoneda[];
+}
+
+export type BancoDatos = Omit<BancoMoneda, 'actualizado_en'>;
 
 // Serie diaria de una categoría y moneda (un punto por día del periodo).
 export interface PuntoDiario {
@@ -50,6 +96,7 @@ export interface Movimiento {
   monto: number;
   moneda: string;
   categoria: string;
+  categoria_gasto?: string;
 }
 
 export interface MovimientosPagina {
@@ -116,4 +163,9 @@ export const api = {
     if (opts.offset != null) q.set('offset', String(opts.offset));
     return request<MovimientosPagina>(`/movimientos?${q}`);
   },
+  banco: () => request<Banco>('/banco'),
+  guardarBanco: (datos: BancoDatos) =>
+    request<Banco>('/banco', { method: 'PUT', body: JSON.stringify(datos) }),
+  categorias: () => request<{ value: string; label: string }[]>('/categorias'),
+  reglas: () => request<{ reglas: Array<{ id: number; patron: string; categoria: string; prioridad: number; activa: boolean }> }>('/reglas'),
 };

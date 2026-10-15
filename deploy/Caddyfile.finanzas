@@ -1,0 +1,3 @@
+http://finanzas.hamstitors.trade {
+	reverse_proxy finanzas-web:80
+}

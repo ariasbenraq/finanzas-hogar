@@ -248,3 +248,105 @@ button.peligro:hover:not(:disabled) { filter: brightness(.96); }
   gap: 1rem;
   margin-top: .9rem;
 }
+
+.pildora.rojo { background: var(--claro-error); color: var(--texto-error); }
+
+.fila-cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.fila-cabecera h2 { margin: 0; }
+.fila-cabecera p { margin: .2rem 0 0; font-size: .85rem; }
+
+.ciclo, .presupuesto, .banco { margin-bottom: 1.25rem; }
+
+.ciclo-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .75rem;
+  margin: .9rem 0 0;
+}
+.ciclo-datos > div {
+  display: block;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: .6rem .8rem;
+}
+.ciclo-datos dt {
+  color: var(--suave);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.ciclo-datos dd { margin: .15rem 0 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.presupuesto.excedido { border-top-color: var(--error); }
+.presupuesto-cifras { margin: .7rem 0 .5rem; font-size: 1.5rem; }
+.presupuesto-cifras strong { font-size: 1.7rem; }
+
+.barra-avance {
+  position: relative;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--fondo-2);
+  border: 1px solid var(--borde);
+  overflow: hidden;
+}
+.barra-relleno {
+  height: 100%;
+  background: var(--acento);
+  border-radius: 999px;
+  transition: width .3s ease;
+}
+.presupuesto.excedido .barra-relleno { background: var(--error); }
+.barra-marca {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--texto);
+  opacity: .5;
+}
+.presupuesto-pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: .5rem;
+  font-size: .85rem;
+}
+
+.banco-linea { height: 8px; margin: .4rem 0 .6rem; }
+
+.conciliar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1rem;
+  margin-top: .7rem;
+  padding-top: .6rem;
+  border-top: 1px dashed var(--borde);
+}
+.conciliar > div { display: flex; flex-direction: column; gap: .2rem; font-size: .85rem; }
+.conciliar .nota { flex-basis: 100%; margin: 0; font-size: .75rem; }
+
+.banco-form { margin-top: 1rem; border-top: 1px solid var(--borde); padding-top: .75rem; }
+.banco-form td { vertical-align: middle; }
+.monto-input {
+  width: 100%;
+  max-width: 150px;
+  padding: .45rem .55rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.banco-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: .75rem;
+}

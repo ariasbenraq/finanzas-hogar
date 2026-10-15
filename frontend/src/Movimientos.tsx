@@ -90,7 +90,7 @@ export default function Movimientos({ periodo }: { periodo: string }) {
                     </td>
                     <td>
                       <span className={m.categoria === 'efectivo' ? 'pildora verde' : 'pildora'}>
-                        {CATEGORIAS[m.categoria] ?? m.categoria}
+                        {CATEGORIAS[m.categoria_gasto ?? m.categoria] ?? (m.categoria_gasto ?? m.categoria)}
                       </span>
                     </td>
                     <td className="num">{dinero(m.monto, m.moneda)}</td>

@@ -56,6 +56,16 @@ export function etiquetaFechaHora(fecha: string): string {
 export const CATEGORIAS: Record<string, string> = {
   tarjeta: 'Tarjeta',
   efectivo: 'Efectivo',
+  alimentos: 'Alimentos',
+  restaurantes: 'Restaurantes',
+  servicios: 'Servicios',
+  transporte: 'Transporte',
+  salud: 'Salud',
+  hogar: 'Hogar',
+  entretenimiento: 'Entretenimiento',
+  educacion: 'Educación',
+  suscripciones: 'Suscripciones',
+  otros: 'Otros',
 };
 
 function titulo(clave: string): string {

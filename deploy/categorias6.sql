@@ -1,0 +1,20 @@
+INSERT INTO app.reglas_categorias (patron, categoria, prioridad) VALUES
+  ('%PRODUCTOS LLAMP%', 'alimentos', 20),
+  ('%NAVARRETE%', 'alimentos', 30),
+  ('%NGR%', 'otros', 40),
+  ('%OLIVARES%', 'alimentos', 30),
+  ('%OPENCODE%', 'educacion', 30),
+  ('%OXXO%', 'alimentos', 15),
+  ('%P2 MINI%', 'alimentos', 20),
+  ('%POLLOS LYKYS%', 'restaurantes', 10),
+  ('%REST LA LENA%', 'restaurantes', 20),
+  ('%SALON CAPON%', 'otros', 40),
+  ('%MAESTRO CHORRILL%', 'restaurantes', 20),
+  ('%SUPERMERCADO CANDY%', 'alimentos', 20),
+  ('%STRIP%', 'otros', 40),
+  ('%VALLEJO%', 'alimentos', 30),
+  ('%VEGA CASH%', 'alimentos', 20),
+  ('%XOL%', 'hogar', 30),
+  ('%YAPE%', 'servicios', 40),
+  ('%SANCHEZCERRO%', 'alimentos', 30)
+ON CONFLICT DO NOTHING;

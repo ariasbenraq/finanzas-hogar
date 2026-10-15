@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { ConsumosService } from './consumos.service.js';
 
@@ -43,5 +43,43 @@ export class ConsumosController {
     const lim = Math.min(Math.max(parseInt(limit ?? '50', 10) || 50, 1), 200);
     const off = Math.max(parseInt(offset ?? '0', 10) || 0, 0);
     return this.svc.movimientos(await this.periodoValido(periodo), categoria ?? null, lim, off);
+  }
+
+  @Get('banco')
+  banco() {
+    return this.svc.banco();
+  }
+
+  @Put('banco')
+  async guardarBanco(@Body() body: Record<string, unknown>) {
+    const moneda = body?.moneda;
+    if (moneda !== 'S' && moneda !== 'D') {
+      throw new BadRequestException('moneda debe ser S o D');
+    }
+    const numero = (v: unknown): number | null => {
+      if (v === null || v === undefined || v === '') return null;
+      const n = Number(v);
+      if (!Number.isFinite(n) || n < 0) {
+        throw new BadRequestException('los montos deben ser números positivos');
+      }
+      return Math.round(n * 100) / 100;
+    };
+    return this.svc.guardarBanco({
+      moneda,
+      a_pagar: numero(body.a_pagar),
+      linea_total: numero(body.linea_total),
+      consumido: numero(body.consumido),
+      disponible: numero(body.disponible),
+    });
+  }
+
+  @Get('categorias')
+  categorias() {
+    return this.svc.categorias();
+  }
+
+  @Get('reglas')
+  reglas() {
+    return this.svc.reglas();
   }
 }
