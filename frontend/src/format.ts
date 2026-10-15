@@ -28,3 +28,35 @@ export function etiquetaPeriodo(periodo: string): string {
     timeZone: 'UTC',
   }).format(fecha);
 }
+
+// "2026-09-25" -> "25 sep" (para el eje de los gráficos)
+export function etiquetaDia(dia: string): string {
+  const [y, m, d] = dia.split('-').map(Number);
+  const fecha = new Date(Date.UTC(y, m - 1, d));
+  return new Intl.DateTimeFormat('es-PE', {
+    day: '2-digit',
+    month: 'short',
+    timeZone: 'UTC',
+  }).format(fecha);
+}
+
+export const CATEGORIAS: Record<string, string> = {
+  tarjeta: 'Tarjeta',
+  efectivo: 'Efectivo',
+};
+
+function titulo(clave: string): string {
+  return CATEGORIAS[clave] ?? clave.charAt(0).toUpperCase() + clave.slice(1);
+}
+
+// Etiqueta de una serie del diario, p. ej. "Tarjeta · S/".
+export function etiquetaSerie(categoria: string, monedaClave: string): string {
+  return `${titulo(categoria)} · ${moneda(monedaClave).simbolo}`;
+}
+
+// Paleta de series (tomada de la plantilla de referencia).
+export const COLORES = ['#4f46e5', '#22c55e', '#facc15', '#ef4444', '#14b8a6', '#e879f9'];
+
+export function colorSerie(indice: number): string {
+  return COLORES[indice % COLORES.length];
+}

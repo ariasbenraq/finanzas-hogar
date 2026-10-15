@@ -36,9 +36,19 @@ function TarjetaMoneda({ linea, actual }: { linea: ResumenLinea; actual: boolean
   );
 }
 
-function Bloque({ titulo, lineas, actual }: { titulo: string; lineas: ResumenLinea[]; actual: boolean }) {
+function Bloque({
+  titulo,
+  lineas,
+  actual,
+  verde = false,
+}: {
+  titulo: string;
+  lineas: ResumenLinea[];
+  actual: boolean;
+  verde?: boolean;
+}) {
   return (
-    <section className="tarjeta">
+    <section className={verde ? 'tarjeta verde' : 'tarjeta'}>
       <h2>{titulo}</h2>
       {lineas.length === 0 ? (
         <p className="suave">Sin consumos en este periodo.</p>
@@ -59,7 +69,7 @@ export default function Tarjetas({ resumen }: { resumen: Resumen }) {
   return (
     <div className="bloques">
       <Bloque titulo="Tarjeta" lineas={resumen.tarjeta} actual={resumen.actual} />
-      <Bloque titulo="Efectivo" lineas={resumen.efectivo} actual={resumen.actual} />
+      <Bloque titulo="Efectivo" lineas={resumen.efectivo} actual={resumen.actual} verde />
     </div>
   );
 }

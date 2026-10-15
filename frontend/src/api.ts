@@ -23,6 +23,26 @@ export interface Resumen {
   efectivo: ResumenLinea[];
 }
 
+// Serie diaria de una categoría y moneda (un punto por día del periodo).
+export interface PuntoDiario {
+  dia: string;
+  total: number;
+  consumos: number;
+  acumulado: number;
+}
+
+export interface SerieDiaria {
+  categoria: string;
+  moneda: string;
+  puntos: PuntoDiario[];
+}
+
+export interface Diario {
+  periodo: string;
+  actual: boolean;
+  series: SerieDiaria[];
+}
+
 export class ApiError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -71,4 +91,5 @@ export const api = {
   logout: () => request<{ ok: boolean }>('/auth/logout', { method: 'POST', body: '{}' }),
   periodos: () => request<Periodo[]>('/periodos'),
   resumen: (periodo: string) => request<Resumen>(`/resumen?periodo=${encodeURIComponent(periodo)}`),
+  diario: (periodo: string) => request<Diario>(`/diario?periodo=${encodeURIComponent(periodo)}`),
 };
