@@ -4,7 +4,7 @@ CREATE SCHEMA IF NOT EXISTS app;
 CREATE TABLE IF NOT EXISTS app.reglas_categorias (
   id SERIAL PRIMARY KEY,
   patron TEXT NOT NULL,
-  categoria TEXT NOT NULL CHECK (categoria IN ('alimentos','restaurantes','servicios','transporte','salud','hogar','entretenimiento','educacion','suscripciones','otros')),
+  categoria TEXT NOT NULL CHECK (categoria IN ('alimentos','restaurantes','servicios','transporte','salud','hogar','entretenimiento','educacion','lectura','libreria','suscripciones','otros')),
   prioridad INT NOT NULL DEFAULT 100,
   activa BOOLEAN NOT NULL DEFAULT true
 );

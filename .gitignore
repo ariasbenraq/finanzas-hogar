@@ -3,3 +3,5 @@ dev/*.sql
 node_modules/
 dist/
 *.tsbuildinfo
+cj*.txt
+
