@@ -212,6 +212,8 @@ export class ConsumosService {
       { value: 'hogar', label: 'Hogar' },
       { value: 'entretenimiento', label: 'Entretenimiento' },
       { value: 'educacion', label: 'Educación' },
+      { value: 'lectura', label: 'Lectura' },
+      { value: 'libreria', label: 'Librería' },
       { value: 'suscripciones', label: 'Suscripciones' },
       { value: 'otros', label: 'Otros' },
     ];

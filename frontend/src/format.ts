@@ -64,6 +64,8 @@ export const CATEGORIAS: Record<string, string> = {
   hogar: 'Hogar',
   entretenimiento: 'Entretenimiento',
   educacion: 'Educación',
+  lectura: 'Lectura',
+  libreria: 'Librería',
   suscripciones: 'Suscripciones',
   otros: 'Otros',
 };
